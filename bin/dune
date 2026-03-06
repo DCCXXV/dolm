@@ -1,0 +1,4 @@
+(executable
+ (public_name dolm)
+ (name main)
+ (libraries dolm tsdl))
