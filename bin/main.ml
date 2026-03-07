@@ -41,14 +41,14 @@ let draw_rect_border renderer x y w h =
 let draw_filled_rect renderer x y w h =
     ignore (Sdl.render_fill_rect renderer (Some (Sdl.Rect.create ~x ~y ~w ~h)))
 
-(* Bind, Sever, Invert, Echo, Consume, Veil, Clear, Cast *)
+(* Consume, Sever, Invert, Veil, Bind, Echo, Clear, Cast *)
 let btn_colors = [|
-    (  0,   0, 255);
     (255,   0,   0);
-    (255,   0, 255);
     (255, 128,   0);
     (255, 255,   0);
     (  0, 255,   0);
+    (255,   0, 255);
+    (  0,   0, 255);
     (255, 255, 255);
     (255, 255, 255);
 |]
@@ -57,20 +57,15 @@ let draw_dolm renderer =
     (* background *)
     ignore (Sdl.set_render_draw_color renderer 0 0 0 255);
     ignore (Sdl.render_clear renderer);
-    (* panel borders *)
-    ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
-    draw_rect_border renderer grid_x grid_y grid_w grid_h;
-    draw_rect_border renderer rpanel_x rpanel_y rpanel_w grid_h;
-    draw_rect_border renderer bpanel_x bpanel_y (window_w - 2 * margin) bpanel_h;
     (* grid lines *)
+    ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
     for i = 1 to grid_size - 1 do
         let x = grid_x + i * tile_size in
         let y = grid_y + i * tile_size in
-        ignore (Sdl.render_draw_line renderer x grid_y x (grid_y + grid_h));
-        ignore (Sdl.render_draw_line renderer grid_x y (grid_x + grid_w) y);
+        ignore (Sdl.render_draw_line renderer x grid_y x (grid_y + grid_h - 1));
+        ignore (Sdl.render_draw_line renderer grid_x y (grid_x + grid_w - 1) y);
     done;
-    (* right panel *)
-    draw_rect_border renderer preview_x preview_y preview_size preview_size;
+    (* right panel buttons *)
     for row = 0 to 3 do
         for col = 0 to 1 do
             let idx = row * 2 + col in
@@ -81,14 +76,19 @@ let draw_dolm renderer =
             draw_filled_rect renderer bx by btn_w btn_h
         done
     done;
-    ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
     (* grid state *)
     ignore (Sdl.set_render_draw_color renderer 50 50 50 255);
     for i = 0 to Array.length state - 1 do
         if state.(i) then
             let (x, y) = itoxy i in
             ignore (Sdl.render_fill_rect renderer (Some (Sdl.Rect.create ~x:(grid_x + x*tile_size+1) ~y:(grid_y + y*tile_size+1) ~w:(tile_size-1) ~h:(tile_size-1))));
-    done
+    done;
+    (* panel borders *)
+    ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
+    draw_rect_border renderer grid_x grid_y grid_w grid_h;
+    draw_rect_border renderer rpanel_x rpanel_y rpanel_w grid_h;
+    draw_rect_border renderer bpanel_x bpanel_y (window_w - 2 * margin) bpanel_h;
+    draw_rect_border renderer preview_x preview_y preview_size preview_size
 
 
 let main () = match Sdl.init Sdl.Init.(video + events) with
