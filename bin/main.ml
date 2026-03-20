@@ -151,7 +151,12 @@ let draw_dolm renderer font small_font =
             ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
             draw_rect_border renderer bx by lvl_btn_w lvl_btn_h
         end
-    done
+    done;
+    (* level title *)
+    let title = Levels.all.(!current_level).title in
+    let title_y = lvl_y0 + lvl_rows * (lvl_btn_h + lvl_gap) + lvl_btn_h / 2 in
+    let title_cx = bpanel_x + (window_w - 2 * margin) / 2 in
+    draw_text renderer small_font title title_cx title_y 255 255 255
 
 
 (* logic *)
@@ -207,7 +212,7 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
     match Ttf.open_font "assets/font/Micro5-Regular.ttf" 72 with
     | Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
     | Ok font ->
-    match Ttf.open_font "assets/font/Micro5-Regular.ttf" 36 with
+    match Ttf.open_font "assets/font/Micro5-Regular.ttf" 48 with
     | Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
     | Ok small_font ->
     match Sdl.create_window ~w:window_w ~h:window_h "Dolm" Sdl.Window.shown with
