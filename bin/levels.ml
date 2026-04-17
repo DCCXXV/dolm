@@ -31,7 +31,7 @@ let level2 = make ("II. The Fish")
 	"o o x x x o o o";
 	"o o o o o o o o";
 	"o o o o o o o o";
-|] (Range (2, 8))
+|] (Range (3, 8))
 
 let level3 = make ("III. Pair of Hearts")
 [|

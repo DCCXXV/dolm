@@ -3,8 +3,6 @@ open Tsdl_ttf
 
 type shape = Dot | Dot4 | Plus | LPlus
 
-(* ui *)
-
 let margin = 2
 
 let rpanel_w = 240
@@ -107,6 +105,42 @@ let draw_shape_icon renderer bx by bw bh shape is_selected =
 	| Plus -> dot 2 2; dot 1 2; dot 3 2; dot 2 1; dot 2 3
 	| LPlus -> for g = 0 to 4 do dot 2 g; dot g 2 done)
 
+let highscores = Array.make (Array.length Levels.all) (-1)
+let save_path = "scores"
+
+let load_scores () =
+	(try
+		let ic = open_in save_path in
+		(try
+			for i = 0 to Array.length highscores - 1 do
+				highscores.(i) <- int_of_string (String.trim (input_line ic))
+			done
+		with End_of_file | Failure _ -> ());
+		close_in ic
+	with Sys_error _ -> ())
+
+let save_scores () =
+	(try
+		let oc = open_out save_path in
+		Array.iter (fun s -> Printf.fprintf oc "%d\n" s) highscores;
+		close_out oc
+	with Sys_error _ -> ())
+
+let is_won () =
+	let won = ref true in
+	Array.iter (fun b -> if b then won := false) state;
+	!won
+
+let level_color i =
+	let s = highscores.(i) in
+	if s = -1 then None
+	else match Levels.all.(i).range with
+	| None -> None
+	| Some (Range (lo, hi)) ->
+		if s <= lo then Some (0, 255, 0)
+		else if s <= hi then Some (0, 128, 0)
+		else Some (255, 0, 0)
+
 let draw_dolm renderer font small_font =
 	(* background *)
 	ignore (Sdl.set_render_draw_color renderer 0 0 0 255);
@@ -168,20 +202,21 @@ let draw_dolm renderer font small_font =
 		let bx = lvl_x0 + col * (lvl_btn_w + lvl_gap) in
 		let by = lvl_y0 + row * (lvl_btn_h + lvl_gap) in
 		let is_current = i = !current_level in
-		if is_current then begin
-			ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
+		let (r, g, b) = match level_color i with
+			| None -> (255, 255, 255)
+			| Some c -> c
+		in
+		ignore (Sdl.set_render_draw_color renderer r g b 255);
+		if is_current then
 			draw_filled_rect renderer bx by lvl_btn_w lvl_btn_h
-		end else begin
-			ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
+		else
 			draw_rect_border renderer bx by lvl_btn_w lvl_btn_h
-		end
 	done;
 	(* level title *)
 	let title = Levels.all.(!current_level).title in
 	let title_y = lvl_y0 + lvl_rows * (lvl_btn_h + lvl_gap) + lvl_btn_h / 2 in
 	let title_cx = bpanel_x + (window_w - 2 * margin) / 2 in
 	draw_text renderer small_font title title_cx title_y 255 255 255
-
 
 (* logic *)
 
@@ -246,20 +281,36 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 		| Error (`Msg e) -> Sdl.log "Create renderer error: %s" e; -1
 		| Ok renderer ->
 			ignore (Sdl.set_render_draw_blend_mode renderer Sdl.Blend.mode_blend);
+			(match Sdl.get_renderer_output_size renderer with
+			| Ok (ow, oh) when ow <> window_w || oh <> window_h ->
+				let (ww, wh) = Sdl.get_window_size w in
+				Sdl.set_window_size w ~w:(ww + window_w - ow) ~h:(wh + window_h - oh)
+			| _ -> ());
 			ignore (Sdl.render_set_logical_size renderer window_w window_h);
+			load_scores ();
 			load_level Levels.all.(0);
 			let e = Sdl.Event.create () in
 			let rec loop () =
+				(* event loop *)
 				while Sdl.poll_event (Some e) do
 					let typ = Sdl.Event.(get e typ) in
 					if typ = Sdl.Event.quit then raise Exit
+					(* click *)
 					else if typ = Sdl.Event.mouse_button_down then begin
 						let mx = Sdl.Event.(get e mouse_button_x) in
 						let my = Sdl.Event.(get e mouse_button_y) in
 						if mx >= grid_x && mx < grid_x + grid_w && my >= grid_y && my < grid_y + grid_h then begin
 							let x = (mx - grid_x) / tile_size in
 							let y = (my - grid_y) / tile_size in
-							spell x y !selected
+							spell x y !selected;
+							if is_won () then begin
+								let s = !steps in
+								let i = !current_level in
+								if highscores.(i) = -1 || s < highscores.(i) then begin
+									highscores.(i) <- s;
+									save_scores ()
+								end
+							end
 						end else begin
 							(* spell buttons *)
 							for row = 0 to 1 do for col = 0 to 1 do
@@ -289,6 +340,7 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 							done
 						end
 					end
+					(* hover *)
 					else if typ = Sdl.Event.mouse_motion then begin
 						let mx = Sdl.Event.(get e mouse_motion_x) in
 						let my = Sdl.Event.(get e mouse_motion_y) in
@@ -298,6 +350,15 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 							do_hover x y !selected
 						end else
 							clear_hover hover
+					end
+					(* window resize *)
+					else if typ = Sdl.Event.window_event then begin
+						let ev = Sdl.Event.(get e window_event_id) in
+						if ev = Sdl.Event.window_event_resized then begin
+							let new_w = Int32.to_int (Sdl.Event.(get e window_data1)) in
+							let aspect_h = new_w * window_h / window_w in
+							Sdl.set_window_size w ~w:new_w ~h:aspect_h
+						end
 					end
 				done;
 				draw_dolm renderer font small_font;
