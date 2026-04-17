@@ -117,7 +117,8 @@ let load_scores () =
 			done
 		with End_of_file | Failure _ -> ());
 		close_in ic
-	with Sys_error _ -> ())
+	with Sys_error _ -> ());
+	highscores.(12) <- 0
 
 let save_scores () =
 	(try
@@ -306,7 +307,7 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 							if is_won () then begin
 								let s = !steps in
 								let i = !current_level in
-								if highscores.(i) = -1 || s < highscores.(i) then begin
+								if i <> 12 && (highscores.(i) = -1 || s < highscores.(i)) then begin
 									highscores.(i) <- s;
 									save_scores ()
 								end

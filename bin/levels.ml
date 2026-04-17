@@ -93,17 +93,17 @@ let level7 = make ("VII. The Hanged Man")
 	"o o o o o o o x";
 |] (Range (6, 6))
 
-let level8 = make ("VIII. The Flowers")
+let level8 = make ("VIII. Target")
 [|
-	"o x o o o o x o";
-	"x o x o o x o x";
-	"o x o o o o x o";
-	"o o o o o o o o";
-	"o o o o o o o o";
-	"o x o o o o x o";
-	"x o x o o x o x";
-	"o x o o o o x o";
-|] (Range (8, 12))
+	"o x o o o o o o";
+	"x o x o x x x x";
+	"o x o o o o o o";
+	"o o o x x o o o";
+	"o x o x x x o o";
+	"o x o o x o o o";
+	"o x o o o o x x";
+	"o x o o o o x x";
+|] (Range (5, 21))
 
 let level9 = make ("IX. The Hermit")
 [|
@@ -190,16 +190,16 @@ let level15 = make ("XV. Coin")
 	"o o o x x o o o";
 |] (Range (12, 20))
 
-let level16 = make ("XVI. #")
+let level16 = make ("XVI. Command")
 [|
+	"o x x o o x x o";
 	"x o x o o x o x";
+	"x x o x x o x x";
 	"o o x o o x o o";
-	"x x x x x x x x";
 	"o o x o o x o o";
-	"o o x o o x o o";
-	"x x x x x x x x";
-	"o o x o o x o o";
+	"x x o x x o x x";
 	"x o x o o x o x";
+	"o x x o o x x o";
 |] (Range (12, 31))
 
 let level17 = make ("XVII. The Cross")
@@ -212,7 +212,7 @@ let level17 = make ("XVII. The Cross")
 	"x x x o o x x x";
 	"o o x o o x o o";
 	"o o x o o x o o";
-|] (Range (16, 19))
+|] (Range (6, 19))
 
 let level18 = make ("XVIII. The Wheel of Fortune")
 [|
