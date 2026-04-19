@@ -1,4 +1,4 @@
 (executable
  (public_name dolm)
  (name main)
- (libraries tsdl tsdl-ttf))
+ (libraries tsdl tsdl-ttf unix))

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Dolm
+Comment=A Lights Out-style puzzle game
+Exec=dolm
+Icon=io.github.DCCXXV.dolm
+Type=Application
+Categories=Game;

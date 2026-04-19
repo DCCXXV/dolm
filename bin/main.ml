@@ -105,8 +105,24 @@ let draw_shape_icon renderer bx by bw bh shape is_selected =
 	| Plus -> dot 2 2; dot 1 2; dot 3 2; dot 2 1; dot 2 3
 	| LPlus -> for g = 0 to 4 do dot 2 g; dot g 2 done)
 
+let data_dir =
+	match Sys.getenv_opt "DOLM_DATA_DIR" with
+	| Some d -> d
+	| None -> if Sys.file_exists "assets" then "." else "/app/share/dolm"
+
+let save_dir =
+	let base = match Sys.getenv_opt "XDG_DATA_HOME" with
+		| Some d -> d
+		| None -> Filename.concat
+			(match Sys.getenv_opt "HOME" with Some h -> h | None -> ".")
+			".local/share"
+	in
+	Filename.concat base "dolm"
+
+let () = (try Unix.mkdir save_dir 0o755 with _ -> ())
+
 let highscores = Array.make (Array.length Levels.all) (-1)
-let save_path = "scores"
+let save_path = Filename.concat save_dir "scores"
 
 let load_scores () =
 	(try
@@ -269,10 +285,11 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 | Error (`Msg e) -> Sdl.log "Init error: %s" e; 1
 | Ok () ->
 	ignore (Ttf.init ());
-	match Ttf.open_font "assets/font/Micro5-Regular.ttf" 72 with
+	let font_path = Filename.concat data_dir "assets/font/Micro5-Regular.ttf" in
+	match Ttf.open_font font_path 72 with
 	| Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
 	| Ok font ->
-	match Ttf.open_font "assets/font/Micro5-Regular.ttf" 48 with
+	match Ttf.open_font font_path 48 with
 	| Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
 	| Ok small_font ->
 	match Sdl.create_window ~w:window_w ~h:window_h "Dolm" Sdl.Window.(shown + resizable) with

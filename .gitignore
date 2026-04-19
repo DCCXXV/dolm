@@ -1,1 +1,6 @@
-_build
+_build/
+build-dir/
+.flatpak-builder/
+flatpak-builder-tools/
+dolm-opam.json
+scores

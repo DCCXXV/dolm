@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<component type="desktop-application">
+  <id>io.github.DCCXXV.dolm</id>
+
+  <name>Dolm</name>
+  <summary>A Lights Out-style puzzle game</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <description>
+    <p>
+      A Lights Out like puzzle game.
+    </p>
+    <p>
+      The objective is to turn every tile dark using the minimum possible steps.
+      You have different shapes that swap the state of each tile they contain.
+    </p>
+    <p>
+      There are 17 levels. Levels vary greatly in difficulty but they can all be
+      solved without using the dot shape (magenta button).
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.DCCXXV.dolm.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <image
+            >https://raw.githubusercontent.com/DCCXXV/dolm/master/assets/img/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/DCCXXV/dolm</url>
+  <url type="bugtracker">https://github.com/DCCXXV/dolm/issues</url>
+
+  <categories>
+    <category>Game</category>
+    <category>LogicGame</category>
+  </categories>
+
+  <releases>
+    <release version="1.0.0" date="2026-04-17" />
+  </releases>
+
+  <content_rating type="oars-1.1" />
+</component>

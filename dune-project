@@ -5,22 +5,22 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github DCCXXV/dolm))
 
-(authors "Author Name <author@example.com>")
+(authors "DCCXXV")
 
-(maintainers "Maintainer Name <maintainer@example.com>")
+(maintainers "DCCXXV")
 
-(license LICENSE)
-
-(documentation https://url/to/documentation)
+(license MIT)
 
 (package
  (name dolm)
- (synopsis "A short synopsis")
- (description "A longer description")
- (depends ocaml)
+ (synopsis "A Lights Out-style puzzle game")
+ (description "Turn every tile dark using the minimum possible steps. 17 levels of increasing difficulty.")
+ (depends
+  ocaml
+  dune
+  tsdl
+  tsdl-ttf)
  (tags
-  ("add topics" "to describe" your project)))
-
-; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
+  (game puzzle "lights out")))
