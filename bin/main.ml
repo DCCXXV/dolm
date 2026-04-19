@@ -313,6 +313,10 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 				while Sdl.poll_event (Some e) do
 					let typ = Sdl.Event.(get e typ) in
 					if typ = Sdl.Event.quit then raise Exit
+					else if typ = Sdl.Event.key_down
+						&& (let k = Sdl.Event.(get e keyboard_keycode) in
+							k = Sdl.K.escape || k = Sdl.K.q)
+					then raise Exit
 					(* click *)
 					else if typ = Sdl.Event.mouse_button_down then begin
 						let mx = Sdl.Event.(get e mouse_button_x) in
@@ -368,15 +372,6 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 							do_hover x y !selected
 						end else
 							clear_hover hover
-					end
-					(* window resize *)
-					else if typ = Sdl.Event.window_event then begin
-						let ev = Sdl.Event.(get e window_event_id) in
-						if ev = Sdl.Event.window_event_resized then begin
-							let new_w = Int32.to_int (Sdl.Event.(get e window_data1)) in
-							let aspect_h = new_w * window_h / window_w in
-							Sdl.set_window_size w ~w:new_w ~h:aspect_h
-						end
 					end
 				done;
 				draw_dolm renderer font small_font;

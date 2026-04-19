@@ -21,6 +21,7 @@ finish-args:
     - --socket=fallback-x11
     - --socket=wayland
     - --device=dri
+    - --env=SDL_VIDEO_WAYLAND_ALLOW_LIBDECOR=0
 
 modules:
     # -------------------------------------------------------------------------
@@ -68,6 +69,28 @@ modules:
           - opam info --field name,all-installed-versions tsdl
 
     # -------------------------------------------------------------------------
+    # SDL2_ttf (tsdl-ttf dlopens libSDL2_ttf at runtime)
+    # -------------------------------------------------------------------------
+    - name: SDL2_ttf
+      buildsystem: cmake-ninja
+      builddir: true
+      config-opts:
+          - -DCMAKE_BUILD_TYPE=Release
+          - -DBUILD_SHARED_LIBS=ON
+          - -DSDL2TTF_SAMPLES=OFF
+          - -DSDL2TTF_VENDORED=ON
+      sources:
+          - type: archive
+            url: https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.22.0/SDL2_ttf-2.22.0.tar.gz
+            sha256: d48cbd1ce475b9e178206bf3b72d56b66d84d44f64ac05803328396234d67723
+      cleanup:
+          - /bin
+          - /include
+          - /lib/cmake
+          - /lib/pkgconfig
+          - /share
+
+    # -------------------------------------------------------------------------
     # Dolm
     # -------------------------------------------------------------------------
     - name: dolm
@@ -75,8 +98,8 @@ modules:
       sources:
           - type: git
             url: https://github.com/DCCXXV/dolm.git
-            tag: v1.0.1
-            commit: ce26e3d7eb8f53d1661b02c880589a9118733383
+            tag: v1.0.3
+            commit: REPLACE_WITH_COMMIT_HASH_AFTER_TAGGING
       build-commands:
           - dune build
           - install -Dm755 _build/default/bin/main.exe /app/bin/dolm
