@@ -8,6 +8,10 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
 
+  <developer id="io.github.DCCXXV">
+    <name>DCCXXV</name>
+  </developer>
+
   <description>
     <p>
       A Lights Out like puzzle game.
@@ -26,22 +30,33 @@
 
   <screenshots>
     <screenshot type="default">
-      <image
-            >https://raw.githubusercontent.com/DCCXXV/dolm/master/assets/img/screenshot.png</image>
+      <caption>Solving a puzzle</caption>
+      <image>https://raw.githubusercontent.com/DCCXXV/dolm/master/assets/img/screenshot.png</image>
     </screenshot>
   </screenshots>
 
   <url type="homepage">https://github.com/DCCXXV/dolm</url>
   <url type="bugtracker">https://github.com/DCCXXV/dolm/issues</url>
+  <url type="vcs-browser">https://github.com/DCCXXV/dolm</url>
 
   <categories>
     <category>Game</category>
     <category>LogicGame</category>
   </categories>
 
-  <releases>
-    <release version="1.0.0" date="2026-04-17" />
-  </releases>
+  <keywords>
+    <keyword>puzzle</keyword>
+    <keyword>lights out</keyword>
+    <keyword>logic</keyword>
+  </keywords>
 
   <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0.0" date="2026-04-17">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
 </component>
