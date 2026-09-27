@@ -158,7 +158,7 @@ let level_color i =
 		else if s <= hi then Some (0, 128, 0)
 		else Some (255, 0, 0)
 
-let draw_dolm renderer font small_font =
+let draw_dolm renderer font small_font tiny_font =
 	(* background *)
 	ignore (Sdl.set_render_draw_color renderer 0 0 0 255);
 	ignore (Sdl.render_clear renderer);
@@ -212,6 +212,21 @@ let draw_dolm renderer font small_font =
 	draw_rect_border renderer preview_x preview_y preview_size preview_size;
 	(* steps counter *)
 	draw_text renderer font (string_of_int !steps) (preview_x + preview_size / 2) (preview_y + preview_size / 2) 255 255 255;
+	(* best score badge *)
+	let best = highscores.(!current_level) in
+	if best >= 0 && Levels.all.(!current_level).range <> None then begin
+		let text = string_of_int best in
+		let (tw, th) = match Ttf.size_text tiny_font text with
+			| Ok s -> s
+			| Error _ -> (0, 0)
+		in
+		let bh = th + 4 in
+		let bw = max bh (tw + 12) in
+		let bx = preview_x + preview_size - bw in
+		ignore (Sdl.set_render_draw_color renderer 255 255 255 255);
+		draw_filled_rect renderer bx preview_y bw bh;
+		draw_text renderer tiny_font text (bx + bw / 2) (preview_y + bh / 2) 0 0 0
+	end;
 	(* level selector *)
 	for i = 0 to Array.length Levels.all - 1 do
 		let row = i / lvl_cols in
@@ -292,6 +307,9 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 	match Ttf.open_font font_path 48 with
 	| Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
 	| Ok small_font ->
+	match Ttf.open_font font_path 32 with
+	| Error (`Msg e) -> Sdl.log "Font error: %s" e; -1
+	| Ok tiny_font ->
 	match Sdl.create_window ~w:window_w ~h:window_h "Dolm" Sdl.Window.(shown + resizable) with
 	| Error (`Msg e) -> Sdl.log "Create window error: %s" e; -1
 	| Ok w ->
@@ -374,7 +392,7 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 							clear_hover hover
 					end
 				done;
-				draw_dolm renderer font small_font;
+				draw_dolm renderer font small_font tiny_font;
 				Sdl.render_present renderer;
 				Sdl.delay 16l;
 				loop ()
@@ -382,6 +400,7 @@ let main () = match Sdl.init Sdl.Init.(video + events) with
 			(try loop () with Exit -> ());
 			Ttf.close_font font;
 			Ttf.close_font small_font;
+			Ttf.close_font tiny_font;
 			Sdl.destroy_renderer renderer;
 			Sdl.destroy_window w;
 			Ttf.quit ();

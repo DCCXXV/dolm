@@ -8,12 +8,9 @@ There are 17 levels. Levels vary greatly in difficulty but they can all be solve
 
 Good luck.
 
-![game screenshot](assets/img/screenshot.png)
+![game screenshot](assets/img/screenshot1.png)
 
-## Run
 
-```
-git clone git@github.com:DCCXXV/dolm.git
-cd dolm
-dune exec dolm
-```
+## Download
+
+[![Get it on Flathub](https://flathub.org/api/badge?locale=en)](https://flathub.org/en/apps/io.github.DCCXXV.dolm)

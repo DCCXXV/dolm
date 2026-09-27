@@ -30,8 +30,16 @@
 
   <screenshots>
     <screenshot type="default">
-      <caption>Solving a puzzle</caption>
-      <image>https://raw.githubusercontent.com/DCCXXV/dolm/master/assets/img/screenshot.png</image>
+      <caption>Solving puzzle IV "Pair of Scissors"</caption>
+      <image>https://raw.githubusercontent.com/DCCXXV/dolm/v1.1.0/assets/img/screenshot1.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Solving puzzle XI "Justice"</caption>
+      <image>https://raw.githubusercontent.com/DCCXXV/dolm/v1.1.0/assets/img/screenshot2.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Solving puzzle XVIII "The Wheel of Fortune"</caption>
+      <image>https://raw.githubusercontent.com/DCCXXV/dolm/v1.1.0/assets/img/screenshot3.png</image>
     </screenshot>
   </screenshots>
 
@@ -53,6 +61,11 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="1.1.0" date="2026-09-27">
+      <description>
+        <p>Show the best score for the current level next to the steps counter.</p>
+      </description>
+    </release>
     <release version="1.0.3" date="2026-04-20">
       <description>
         <p>Initial release.</p>
